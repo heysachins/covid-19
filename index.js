@@ -596,21 +596,35 @@ Promise.all([
       .style("opacity", "0.8")
       .style("transition", "0.4s")
       .on("mouseover", function (d) {
+        
+        // addToolTipMap();
         onMouseOver(this);
       })
       .on("mouseout", function (d) {
         onMouseOut(this);
       })
       .on("click", function (d) {
+        // addToolTipMap();
         onMouseClick(this);
       })
       .on("mousemove", function () {
-        addToolTipMap();
         //tool tip move
+        addToolTipMap();
+
+        var divNodeMap = svgMainMap.node(); // get the DOM node of the selected div
+        var rectMap = divNodeMap.getBoundingClientRect(); // get the size and position of the div relative to the viewport
+        var topMap = rectMap.top + window.scrollY; // add the current scroll position to get the top screen coordinate
+        var leftMap = rectMap.left + window.scrollX; // add the current scroll position to get the left screen coordinate
+
         var toolTip = d3
           .select("#toolTip")
-          .style("top", event.pageY - 1190 + "px")
-          .style("left", event.pageX - 260 + "px");
+          .style("top", event.pageY - topMap + 15+ "px")
+          .style("left", event.pageX - leftMap + 15 + "px");
+
+        // var toolTip = d3
+        //   .select("#toolTip")
+        //   .style("top", event.pageY - 1190 + "px")
+        //   .style("left", event.pageX - 260 + "px");
 
         var currentMovingCountry = d3.select(this).attr("id");
         toolTip.select("p").text(currentMovingCountry);
@@ -655,7 +669,6 @@ Promise.all([
           svg,
           {
             a: percOfTotalCasesOfCountry,
-
             c: remainingPerc,
           },
           "toolTip",
@@ -818,11 +831,11 @@ Promise.all([
   });
 
   circles.on("mouseout", function (d) {
-    onMouseOut();
+    // onMouseOut();
   });
 
   circles.on("click", function (d) {
-    onMouseClick(this);
+    // onMouseClick(this);
   });
 
   function addToolTipMap() {
@@ -836,6 +849,7 @@ Promise.all([
   //THIS FUNCTION IS CALLED LATER ON IN THREE VISUALISATIONS - MAP, BAR CHART, AND STACKED AREA CHART.
 
   function onMouseOver(thisSelection) {
+    addToolTipMap()
     var continent = d3.select(thisSelection).attr("class"); //selecting the class on hover
     var reg = /\w+$/;
     selectingContinentFromCSS = String(continent.match(reg)); //CSS contains multiple classes, hence just using continent wont work, so implemented code to fetch last css class which would be continent name of the circle and add or remove classes accordingly
