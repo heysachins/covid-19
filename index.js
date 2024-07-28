@@ -3,6 +3,16 @@ var currentClassActive = null;
 var oldClassActive = null;
 var cActive = 0;
 
+window.onload = function() {
+  fetch('owid-covid-data.csv')
+      .then(response => response.text())
+      .then(data => {
+          console.log(data);
+          // Process the CSV data here
+          processData(data);
+      })
+      .catch(error => console.error('Error fetching the CSV file:', error));
+};
 //dropping the menu down when user clicks on menu once screen width decreases
 d3.select("header")
   .select("span")
